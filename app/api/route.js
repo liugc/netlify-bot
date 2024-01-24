@@ -1,4 +1,7 @@
 export async function POST(request) {
+  const feishu = process.env.FEISHU;
+  const team = process.env.TEAM;
+
   const body = await request.json();
   let { state, id, name, title, commit_url, error_message } = body;
   console.log(JSON.stringify(body));
@@ -29,7 +32,7 @@ export async function POST(request) {
   }
 
   if (!commit_url || state === "error") {
-    commit_url = `https://app.netlify.com/teams/anker-dtc/builds/${id}`;
+    commit_url = `https://app.netlify.com/teams/${team}/builds/${id}`;
   }
 
   await axios.post(url, {
