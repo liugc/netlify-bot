@@ -1,0 +1,63 @@
+export async function POST(request) {
+  const body = await request.json();
+  let { state, id, name, title, commit_url, error_message } = body;
+  console.log(JSON.stringify(body));
+  console.log(`${name} --- ${title} --- ${commit_url}`);
+  let url;
+  try {
+    url = JSON.parse(feishu);
+  } catch (e) {}
+
+  if (!url) {
+    return Response.json({ error: "feishu is not set" })
+  }
+
+  if (typeof url === "object") {
+    url = url[name];
+  }
+
+  if (!url) {
+    return Response.json({ error: "feishu is not match" })
+  }
+
+  title = title || "手动部署成功";
+  let content = "😀 eufy | 代码发布成功";
+
+  if (state === "error") {
+    content = "😵 eufy | 代码发布失败";
+    title = error_message;
+  }
+
+  if (!commit_url || state === "error") {
+    commit_url = `https://app.netlify.com/teams/anker-dtc/builds/${id}`;
+  }
+
+  await axios.post(url, {
+    msg_type: "interactive",
+    card: {
+      elements: [
+        {
+          tag: "div",
+          text: { content: title, tag: "lark_md" },
+        },
+        {
+          actions: [
+            {
+              tag: "button",
+              text: { content: "详情👀", tag: "lark_md" },
+              url: commit_url,
+              type: "default",
+              value: {},
+            },
+          ],
+          tag: "action",
+        },
+      ],
+      header: {
+        title: { content, tag: "plain_text" },
+      },
+    },
+  });
+
+  return Response.json({ success: true })
+}
