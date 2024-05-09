@@ -34,7 +34,7 @@ export async function POST(request) {
   }
 
   if (branch === "release") {
-    content = "🤖 eufy | 预发布" + state === "error" ? "失败" : "成功";
+    content = "🤖 eufy | 预发布" + (state === "error" ? "失败" : "成功");
   }
 
   if (!commit_url || state === "error") {
