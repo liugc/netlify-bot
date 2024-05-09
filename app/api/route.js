@@ -5,7 +5,7 @@ export async function POST(request) {
   const team = process.env.TEAM;
 
   const body = await request.json();
-  let { state, id, name, title, commit_url, error_message } = body;
+  let { state, id, name, title, commit_url, branch, error_message } = body;
   console.log(JSON.stringify(body));
   console.log(`${name} --- ${title} --- ${commit_url}`);
   let url;
@@ -14,7 +14,7 @@ export async function POST(request) {
   } catch (e) {}
 
   if (!url) {
-    return Response.json({ error: "feishu is not set" })
+    return Response.json({ error: "feishu is not set" });
   }
 
   if (typeof url === "object") {
@@ -22,7 +22,7 @@ export async function POST(request) {
   }
 
   if (!url) {
-    return Response.json({ error: "feishu is not match" })
+    return Response.json({ error: "feishu is not match" });
   }
 
   title = title || "手动部署成功";
@@ -31,6 +31,10 @@ export async function POST(request) {
   if (state === "error") {
     content = "😵 eufy | 代码发布失败";
     title = error_message;
+  }
+
+  if (branch === "release") {
+    content = "🤖 eufy | 预发布" + state === "error" ? "失败" : "成功";
   }
 
   if (!commit_url || state === "error") {
@@ -64,5 +68,5 @@ export async function POST(request) {
     },
   });
 
-  return Response.json({ success: true })
+  return Response.json({ success: true });
 }
