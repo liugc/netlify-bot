@@ -33,7 +33,7 @@ export async function POST(request) {
     title = error_message;
   }
 
-  if (branch === "release") {
+  if (branch === "release" || branch === "uat") {
     content = "🤖 eufy | 预发布" + (state === "error" ? "失败" : "成功");
   }
 
