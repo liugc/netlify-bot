@@ -3,11 +3,15 @@ import axios from "axios";
 export async function POST(request) {
   const feishu = process.env.FEISHU;
   const team = process.env.TEAM;
+  const project = process.env.PROJECT;
 
   const body = await request.json();
   let { state, id, name, title, commit_url, branch, error_message } = body;
-  console.log(JSON.stringify(body));
-  console.log(`${name} --- ${title} --- ${commit_url}`);
+  if (project) {
+    const repo = commit_url.match(/([a-z-]+)\/commit/)?.[1];
+    const id = commit_url.split("/").pop();
+    commit_url = project + "/d/" + repo + "/git/commit/" + id;
+  }
   let url;
   try {
     url = JSON.parse(feishu);
