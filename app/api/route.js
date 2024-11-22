@@ -8,9 +8,11 @@ export async function POST(request) {
   const body = await request.json();
   let { state, id, name, title, commit_url, branch, error_message } = body;
   if (project) {
-    const repo = commit_url.match(/([a-z-]+)\/commit/)?.[1];
-    const id = commit_url.split("/").pop();
-    commit_url = project + "/d/" + repo + "/git/commit/" + id;
+    const id = commit_url?.split("/").pop();
+    const repo = commit_url?.match(/([a-z-]+)\/commit/)?.[1];
+    if (repo && id) {
+      commit_url = project + "/d/" + repo + "/git/commit/" + id;
+    }
   }
   let url;
   try {
